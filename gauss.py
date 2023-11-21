@@ -25,10 +25,10 @@ class gauss:
             self.pointPlace.append(-1 * math.sqrt((3 / 7) - (2 / 7) * math.sqrt(6 / 5)))
             self.pointPlace.append(math.sqrt((3 / 7) - (2 / 7) * math.sqrt(6 / 5)))
             self.pointPlace.append(math.sqrt((3 / 7) + (2 / 7) * math.sqrt(6 / 5)))
-            self.pointWeight.append(18 - math.sqrt(30) / 36)
-            self.pointWeight.append(18 + math.sqrt(30) / 36)
-            self.pointWeight.append(18 + math.sqrt(30) / 36)
-            self.pointWeight.append(18 - math.sqrt(30) / 36)
+            self.pointWeight.append((18 - math.sqrt(30)) / 36)
+            self.pointWeight.append((18 + math.sqrt(30)) / 36)
+            self.pointWeight.append((18 + math.sqrt(30)) / 36)
+            self.pointWeight.append((18 - math.sqrt(30)) / 36)
 
 
 def fun1d(x):
