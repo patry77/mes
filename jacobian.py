@@ -7,7 +7,6 @@ class jacobian:
         self.x=x
         self.y=y
         self.points=points
-        # self.grid=grid
         gaussg=gauss(points)
         elementuni=ElementUni(self.points)
         pointsSq=points**2
@@ -38,13 +37,12 @@ class jacobian:
             inverseJMatrix = np.array([[dydeta, -dydksi], [-dxdeta, dxdksi]])
             # print(inverseJMatrix)
             for j in range(4):
-                print(np.array([[elementuni.dNdKsi[i][j]], [elementuni.dNdEta[i][j]]]))
                 helpTab = np.matmul((detJMatrix[i]*inverseJMatrix), np.array([[elementuni.dNdKsi[i][j]], [elementuni.dNdEta[i][j]]]))
                 dNdx[i][j] = helpTab[0][0]
                 dNdy[i][j] = helpTab[1][0]
         # print(dxdeta)
         # print(dxdksi)
-        print(dNdx)
+        # print(dNdx)
         # print(dNdy)
         tmpH=[]
         for i in range(pointsSq):
@@ -57,6 +55,6 @@ class jacobian:
         H=np.zeros((4, 4))
         for i in range(pointsSq):
             H+=tmpH[i]*gaussg.pointWeight[i//points]*gaussg.pointWeight[i%points]
-        # print(H)
+        print(H)
 
 

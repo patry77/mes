@@ -2,25 +2,23 @@ import math
 
 
 class gauss:
-    pointPlace = []
-    pointWeight = []
-    points = 0
-
     def __init__(self, points):
+        self.pointPlace=[]
+        self.pointWeight=[]
         self.points = points
         if self.points == 2:
             self.pointPlace.append(-1 * math.sqrt(1 / 3))
             self.pointPlace.append(math.sqrt(1 / 3))
             self.pointWeight.append(1)
             self.pointWeight.append(1)
-        if self.points == 3:
-            self.pointPlace.append(-1 * math.sqrt(3 / 5))
+        elif self.points == 3:
+            self.pointPlace.append(-math.sqrt(3 / 5))
             self.pointPlace.append(0)
             self.pointPlace.append(math.sqrt(3 / 5))
             self.pointWeight.append(5 / 9)
             self.pointWeight.append(8 / 9)
             self.pointWeight.append(5 / 9)
-        if self.points == 4:
+        elif self.points == 4:
             self.pointPlace.append(-1 * math.sqrt((3 / 7) + (2 / 7) * math.sqrt(6 / 5)))
             self.pointPlace.append(-1 * math.sqrt((3 / 7) - (2 / 7) * math.sqrt(6 / 5)))
             self.pointPlace.append(math.sqrt((3 / 7) - (2 / 7) * math.sqrt(6 / 5)))
