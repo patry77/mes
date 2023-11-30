@@ -42,8 +42,8 @@ class jacobian:
                 dNdy[i][j] = helpTab[1][0]
         # print(dxdeta)
         # print(dxdksi)
-        # print(dNdx)
-        # print(dNdy)
+        print(dNdx)
+        print(dNdy)
         tmpH=[]
         for i in range(pointsSq):
             tmpHx=np.array([[dNdx[i][0]], [dNdx[i][1]], [dNdx[i][2]], [dNdx[i][3]]])
@@ -56,5 +56,3 @@ class jacobian:
         for i in range(pointsSq):
             H+=tmpH[i]*gaussg.pointWeight[i//points]*gaussg.pointWeight[i%points]
         print(H)
-
-
