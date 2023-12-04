@@ -10,14 +10,16 @@ class globalData:
         self.specificHeat = specificHeat
 
 class node:
-    def __init__(self, x, y):
+    def __init__(self, id, x, y):
+        self.id=id
         self.x = x
         self.y = y
         self.bc=0
 
 class element:
-    def __init__(self, id):
+    def __init__(self, id, idlist):
         self.id = id
+        self.idlist=idlist
 
 class grid:
     def __init__(self, elements, nodes):

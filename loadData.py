@@ -1,36 +1,5 @@
 import data
 from data import *
-
-def loadData(file):
-    with open(file, 'r') as file:
-        lines = file.read().splitlines()
-    simulationTime, simulationStepTime, conductivity, alfa, tot, initialTemp, density, specificHeat, nodes, elements = lines
-    return simulationTime, simulationStepTime, conductivity, alfa, tot, initialTemp, density, specificHeat, nodes, elements
-def loadElements(file):
-    elements = []
-    with open(file, 'r') as file:
-        lines = file.read().splitlines()
-        for i in lines:
-            i = i.split(",")
-            int_list = []
-            for y in i:
-                integer = int(y)
-                int_list.append(integer)
-            elements.append(data.element(int_list))
-    return elements
-def loadNodes(file):
-    nodes = []
-    with open(file, 'r') as file:
-        lines = file.read().splitlines()
-        for i in lines:
-            i = i.split(",")
-            int_list = []
-            for y in i:
-                integer = float(y)
-                int_list.append(integer)
-            nodes.append(data.node(int_list[0], int_list[1]))
-    return nodes
-
 def load_data(filename):
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -69,11 +38,21 @@ def load_data(filename):
             for i in range(iteration, iteration+nodes_number):
                 node_data = lines[i].strip().split(',')
                 # print(node_data)
-                nodes.append(node(float(node_data[1]), float(node_data[2])))
+                nodes.append(node(int(node_data[0]),float(node_data[1]), float(node_data[2])))
         elif data[0] == "*Element,":
+            nodeid=[]
             for i in range(iteration, iteration+elements_number):
                 element_data = lines[i].strip().split(',')
                 int_list = list(map(int, [i.strip() for i in element_data]))
-                # print(element_data)
-                elements.append(element(int_list))
+                for i in range(1, len(int_list)):
+                    nodeid.append(int_list[i])
+                elements.append(element(int_list, nodeid))
+                nodeid=[]
+        elif data[0] == "*BC":
+            bc_data = lines[iteration].strip().split(',')
+            bc_data = list(map(int, [i.strip() for i in bc_data]))
+            for i in range(len(nodes)):
+                if nodes[i].id in bc_data:
+                    nodes[i].bc = 1
+
     return globalData(simulationTime, simulationStepTime, conductivity, alfa, tot, initialTemp, density, specificHeat), nodes, elements
