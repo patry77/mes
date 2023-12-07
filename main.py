@@ -1,9 +1,12 @@
+from numpy.linalg import linalg
+
 import data
 import loadData
 import gauss
 from ElementUni import ElementUni
-from jacobian import jacobian
+from jacobian import *
 from hbcMatrix import *
+from agregation import *
 
 
 if __name__ == '__main__':
@@ -21,10 +24,13 @@ if __name__ == '__main__':
     # uni.printdNdKSI()
     # x=[0, 0.025, 0.025, 0]
     # y=[0, 0, 0.025, 0.025]
-    # jacobian(4, x, y)
     loading=loadData.load_data("test.txt")
     grid=data.grid(loading[2], loading[1])
-    for i in range(len(grid.elements)):
-        print(grid.elements[i].idlist)
     globaldata=loading[0]
-    hbcMatrix(grid, 2, globaldata)
+    hbcp=hbcMatrix(grid, 2, globaldata)
+    grid=hbcp.returnGrid()
+    h=localHMatrix(2, grid, globaldata)
+    grid=h.returnGrid()
+    # print(grid.elements[0].Hbc)
+    agregation=agregation(grid, globaldata)
+    localCMatrix(2, grid, globaldata)

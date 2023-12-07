@@ -7,6 +7,10 @@ class Surface:
     def __init__(self, points, ksi, eta):
         self.ksi=ksi
         self.eta=eta
+        # print("ksi")
+        # print(ksi)
+        # print("eta")
+        # print(eta)
         self.points = points
         self.N = np.zeros((self.points, 4))
         # self.gauss = gauss(points)
@@ -48,53 +52,55 @@ class hbcMatrix:
         #     print(self.surfacelist[i].N)
 
         self.uni=ElementUni(points)
-        # self.alfa=self.globalData.alfa
-        self.alfa=25
+        self.alfa=self.globalData.alfa
+        self.tot=self.globalData.tot
+        for i in range (len(self.grid.elements)):
+            nodes = []
+            self.hbclist = []
+            self.plist = []
+            for j in range(len(self.grid.elements[i].idlist)):
+                for k in range(len(self.grid.nodes)):
+                    if self.grid.elements[i].idlist[j] == self.grid.nodes[k].id:
+                        nodes.append(self.grid.nodes[k])
+            for j in range(len(self.surfacelist)):
+                self.hbcM = np.zeros((4, 4))
+                self.pM=np.zeros((4, 1))
+                if(j==3):
+                    self.L = math.sqrt(pow(nodes[j].x - nodes[0].x, 2) + pow(nodes[j].y - nodes[0].y, 2))
+                    if(nodes[j].bc == 0 or nodes[0].bc == 0):
+                        # print("pomijam")
+                        continue
+                else:
+                    self.L = math.sqrt(pow(nodes[j].x - nodes[j+1].x, 2) + pow(nodes[j].y - nodes[j+1].y, 2))
+                    if (nodes[j].bc == 0 or nodes[j+1].bc == 0):
+                        # print("pomijam")
+                        continue
+                self.detJ = self.L / 2
 
-        # self.tot=self.globalData.tot
-        self.tot=1200
-        self.hbclist=[]
-        self.plist=[]
-        element = grid.elements[0]
-        nodes = []
-        for j in range(len(grid.nodes)):
-            if (grid.nodes[j].id in element.idlist):
-                nodes.append(grid.nodes[j])
-        for i in range(len(self.surfacelist)):
-            self.hbcM = np.zeros((4, 4))
-            self.pM=np.zeros((4, 1))
-            if(i==3):
-                self.L = math.sqrt(pow(nodes[i].x - nodes[0].x, 2) + pow(nodes[i].y - nodes[0].y, 2))
-                if(nodes[i].bc == 0 or nodes[0].bc == 0):
-                    print("pomijam")
-                    continue
-            else:
-                self.L = math.sqrt(pow(nodes[i].x - nodes[i+1].x, 2) + pow(nodes[i].y - nodes[i+1].y, 2))
-                if (nodes[i].bc == 0 or nodes[i+1].bc == 0):
-                    print("pomijam")
-                    continue
-            self.detJ = self.L / 2
-
-            for j in range(points):
-                arr=[]
-                arr=np.array([[self.surfacelist[i].N[j][0]], [self.surfacelist[i].N[j][1]], [self.surfacelist[i].N[j][2]], [self.surfacelist[i].N[j][3]]])
-                self.hbcM+=self.alfa*np.matmul(arr, arr.transpose())*self.gauss.pointWeight[j]
-                self.pM+=arr*self.gauss.pointWeight[j]
-                print("arr")
-                print(arr)
-            # print("pM")
-            # print(self.pM)
-            self.pM=self.pM*self.tot*self.detJ*self.alfa
-            self.hbcM=self.hbcM*self.detJ
-            # print("hbc")
-            # print(self.hbcM)
-            # print("p")
-            # print(self.pM)
-            self.plist.append(self.pM)
-            self.hbclist.append(self.hbcM)
-        print("HBC")
-        print(sum(self.hbclist))
-        print("P")
-        print(sum(self.plist))
+                for k in range(points):
+                    arr=[]
+                    arr=np.array([[self.surfacelist[j].N[k][0]], [self.surfacelist[j].N[k][1]], [self.surfacelist[j].N[k][2]], [self.surfacelist[j].N[k][3]]])
+                    self.hbcM+=np.matmul(arr, arr.transpose())*self.gauss.pointWeight[k]
+                    self.pM+=arr*self.gauss.pointWeight[k]
+                # print("pM")
+                # print(self.pM)
+                self.pM=self.pM*self.tot*self.detJ*self.alfa
+                self.hbcM=self.hbcM*self.detJ*self.alfa
+                # print("hbc")
+                # print(self.hbcM)
+                # print("p")
+                # print(self.pM)
+                self.plist.append(self.pM)
+                self.hbclist.append(self.hbcM)
+            hbc=np.zeros((4, 4))
+            for j in range(len(self.hbclist)):
+                hbc+=self.hbclist[j]
+            self.grid.elements[i].Hbc=hbc
+            p=np.zeros((4, 1))
+            for j in range(len(self.plist)):
+                p+=self.plist[j]
+            self.grid.elements[i].P=p
+    def returnGrid(self):
+        return self.grid
 
 
