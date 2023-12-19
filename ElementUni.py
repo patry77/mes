@@ -9,6 +9,7 @@ class ElementUni:
         self.gauss = gauss(points)
         self.dNdEta = np.zeros((self.pointQuantity* self.pointQuantity, 4))
         self.dNdKsi = np.zeros((self.pointQuantity* self.pointQuantity, 4))
+        self.NTab = np.zeros((self.pointQuantity* self.pointQuantity, 4))
 
         for i in range(self.pointQuantity * self.pointQuantity):
             # print(i//self.pointQuantity)
@@ -33,6 +34,16 @@ class ElementUni:
                     self.dNdEta[i][j] = 0.25 * (1 + self.gauss.pointPlace[i % self.pointQuantity])
                 if j == 3:
                     self.dNdEta[i][j] = 0.25 * (1 - self.gauss.pointPlace[i % self.pointQuantity])
+        for i in range(self.pointQuantity * self.pointQuantity):
+            for j in range(4):
+                if j == 0:
+                    self.NTab[i][j] = 0.25 * (1-self.gauss.pointPlace[i % self.pointQuantity]) * (1-self.gauss.pointPlace[i // self.pointQuantity])
+                if j == 1:
+                    self.NTab[i][j] = 0.25 * (1+self.gauss.pointPlace[i % self.pointQuantity]) * (1-self.gauss.pointPlace[i // self.pointQuantity])
+                if j == 2:
+                    self.NTab[i][j] = 0.25 * (1+self.gauss.pointPlace[i % self.pointQuantity]) * (1+self.gauss.pointPlace[i // self.pointQuantity])
+                if j == 3:
+                    self.NTab[i][j] = 0.25 * (1-self.gauss.pointPlace[i % self.pointQuantity]) * (1+self.gauss.pointPlace[i // self.pointQuantity])
 
     def printdNdKSI(self):
         print("")
@@ -43,3 +54,7 @@ class ElementUni:
         print("")
         print("dNdEta: ")
         print(self.dNdEta)
+    def printNtab(self):
+        print("")
+        print("NTab: ")
+        print(self.NTab)

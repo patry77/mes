@@ -24,6 +24,7 @@ class element:
         self.H=np.zeros((4, 4))
         self.Hbc=np.zeros((4, 4))
         self.P=np.zeros((4, 1))
+        self.C=np.zeros((4, 4))
 
 class grid:
     def __init__(self, elements, nodes):

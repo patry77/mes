@@ -22,6 +22,7 @@ if __name__ == '__main__':
     # uni = ElementUni(3)
     # uni.printdNdEta()
     # uni.printdNdKSI()
+    # uni.printNtab()
     # x=[0, 0.025, 0.025, 0]
     # y=[0, 0, 0.025, 0.025]
     loading=loadData.load_data("test.txt")
@@ -31,6 +32,5 @@ if __name__ == '__main__':
     grid=hbcp.returnGrid()
     h=localHMatrix(2, grid, globaldata)
     grid=h.returnGrid()
-    # print(grid.elements[0].Hbc)
+    print(grid.elements[0].C)
     agregation=agregation(grid, globaldata)
-    localCMatrix(2, grid, globaldata)
