@@ -25,12 +25,12 @@ if __name__ == '__main__':
     # uni.printNtab()
     # x=[0, 0.025, 0.025, 0]
     # y=[0, 0, 0.025, 0.025]
-    loading=loadData.load_data("test.txt")
+    loading=loadData.load_data("test_mix/.txt")
     grid=data.grid(loading[2], loading[1])
     globaldata=loading[0]
     hbcp=hbcMatrix(grid, 2, globaldata)
     grid=hbcp.returnGrid()
     h=localHMatrix(2, grid, globaldata)
     grid=h.returnGrid()
-    print(grid.elements[0].C)
     agregation=agregation(grid, globaldata)
+    agregation.tempSimulation()

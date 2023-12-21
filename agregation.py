@@ -4,6 +4,11 @@ class agregation:
     def __init__(self, grid, globalData):
         self.grid = grid
         self.globalData = globalData
+        self.dtau = 0
+        self.t0 = np.zeros((len(self.grid.nodes), 1))
+        for i in range(len(self.grid.nodes)):
+            self.t0[i] = self.globalData.initialTemp
+        self.step = self.globalData.simulationStepTime
         self.H = np.zeros((len(self.grid.nodes), len(self.grid.nodes)))
         self.P = np.zeros((len(self.grid.nodes), 1))
         self.C = np.zeros((len(self.grid.nodes), len(self.grid.nodes)))
@@ -14,11 +19,14 @@ class agregation:
                 for k in range(4):
                     self.H[self.grid.elements[i].idlist[j] - 1][self.grid.elements[i].idlist[k] - 1] += localH[j][k]
                     self.C[self.grid.elements[i].idlist[j] - 1][self.grid.elements[i].idlist[k] - 1] += self.grid.elements[i].C[j][k]
-        print("H")
-        print(self.H)
-        print("C")
-        print(self.C)
-        print("P")
-        print(self.P)
-        print("T")
-        print(linalg.solve(self.H, self.P))
+    def tempSimulation(self):
+        tauinitial = 0
+        taufinal = self.globalData.simulationTime
+        while tauinitial < taufinal:
+            self.dtau += self.step
+            H = self.H + self.C / self.step
+            P = self.P + (self.C / self.step) @ self.t0
+            self.t0 = linalg.solve(H, P)
+            tauinitial += self.step
+            print("dtau:  ", self.dtau, "  tmin:  ", min(self.t0), "  tmax:  ", max(self.t0))
+
