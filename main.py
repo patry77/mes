@@ -11,6 +11,7 @@ from agregation import *
 
 if __name__ == '__main__':
     testnodes = [data.node(1,0, 0), data.node(2,0.025, 0), data.node(3,0.025, 0.025), data.node(4,0, 0.025)]
+    fileName="test_mix.txt"
     # elements = [data.element([1, 2, 3, 4])]
     # grid=data.grid(elements, testnodes)
     # print(myGrid.elements[0].id[1])
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     # uni.printNtab()
     # x=[0, 0.025, 0.025, 0]
     # y=[0, 0, 0.025, 0.025]
-    loading=loadData.load_data("test_mix/.txt")
+    loading=loadData.load_data(fileName)
     grid=data.grid(loading[2], loading[1])
     globaldata=loading[0]
     hbcp=hbcMatrix(grid, 2, globaldata)
@@ -33,4 +34,5 @@ if __name__ == '__main__':
     h=localHMatrix(2, grid, globaldata)
     grid=h.returnGrid()
     agregation=agregation(grid, globaldata)
-    agregation.tempSimulation()
+    fileName=fileName.split(".")
+    agregation.tempSimulation(fileName[0])
