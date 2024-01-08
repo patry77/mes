@@ -1,5 +1,17 @@
 import numpy as np
 from numpy import linalg
+
+'''
+Symulacja temperatury w agregacji
+dtau - krok czasowy
+t0 - wektor temperatury w danym kroku czasowym
+step - krok symulacji
+H - macierz sztywności
+P - wektor obciążeń
+C - macierz pojemności cieplnej
+tauinitial - czas początkowy
+taufinal - czas końcowy
+'''
 class agregation:
     def __init__(self, grid, globalData):
         self.grid = grid

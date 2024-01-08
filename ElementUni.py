@@ -1,5 +1,17 @@
 from gauss import gauss
 import numpy as np
+
+
+'''
+Element Uniwersalny to klasa, która zawiera w sobie wszystkie potrzebne informacje o elemencie
+wielokątnym. W konstruktorze obliczane są wartości funkcji kształtu oraz ich pochodnych dla
+danego elementu. W klasie znajdują się również funkcje, które wypisują wartości funkcji kształtu
+oraz ich pochodnych.
+
+dndksi - pochodne funkcji kształtu po ksi
+dndeta - pochodne funkcji kształtu po eta
+ntab - funkcje kształtu
+'''
 class ElementUni:
 
     def __init__(self, points):

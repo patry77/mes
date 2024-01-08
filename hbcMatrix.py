@@ -1,19 +1,36 @@
 import math
-
+from ElementUni import *
 import numpy as np
 from gauss import gauss
-from ElementUni import *
+
+'''
+Macierz Hbc - zmodifikowana macierz H, uwzgledniajaca warunki brzegowe
+Wektor P - wektor globalny obciążeń, reprezentuje obciążenia na powierzchni, takie jak np. zewnetrzne strumienie ciepla
+alfa - współczynnik wymiany ciepła
+tot - temperatura otoczenia
+klasa hbcMatrix - klasa reprezentujaca macierz Hbc i wektor P
+klasa Surface - klasa reprezentujaca powierzchnie elementu zawierajaca funkcje ksztaltu
+sposób wykorzystania warunków brzegowych:
+    - jeżeli węzeł należy do powierzchni, na której występuje warunek brzegowy, to jego współczynnik przy temperaturze
+    jest równy 1, a w wektorze P jest wartość temperatury, która jest wymuszona przez warunek brzegowy
+    - jeżeli węzeł nie należy do powierzchni, na której występuje warunek brzegowy, to jego współczynnik przy temperaturze
+    jest równy 0, a w wektorze P jest wartość temperatury, która jest wymuszona przez warunek brzegowy pomnożona
+    przez współczynnik przy temperaturze
+działanie programu krok po kroku:
+    - tworzymy listę powierzchni elementu
+    - dla każdej powierzchni obliczamy macierz Hbc i wektor P
+    - sumujemy macierze Hbc i wektory P dla każdej powierzchni
+    - dodajemy macierz Hbc do macierzy H
+    - dodajemy wektor P do wektora P
+'''
+
+
 class Surface:
     def __init__(self, points, ksi, eta):
         self.ksi=ksi
         self.eta=eta
-        # print("ksi")
-        # print(ksi)
-        # print("eta")
-        # print(eta)
         self.points = points
         self.N = np.zeros((self.points, 4))
-        # self.gauss = gauss(points)
         for i in range(self.points):
             for j in range(4):
                 if j==0:
@@ -46,11 +63,6 @@ class hbcMatrix:
                 for j in range(points):
                     ksi.append(2-i)
             self.surfacelist.append(Surface(points,ksi,eta))
-        # for i in range(len(self.surfacelist)):
-        #     print("Surface: ")
-        #     print(i)
-        #     print(self.surfacelist[i].N)
-
         self.uni=ElementUni(points)
         self.alfa=self.globalData.alfa
         self.tot=self.globalData.tot
@@ -80,16 +92,10 @@ class hbcMatrix:
                 for k in range(points):
                     arr=[]
                     arr=np.array([[self.surfacelist[j].N[k][0]], [self.surfacelist[j].N[k][1]], [self.surfacelist[j].N[k][2]], [self.surfacelist[j].N[k][3]]])
-                    self.hbcM+=np.matmul(arr, arr.transpose())*self.gauss.pointWeight[k]
+                    self.hbcM+=arr @ arr.T*self.gauss.pointWeight[k]
                     self.pM+=arr*self.gauss.pointWeight[k]
-                # print("pM")
-                # print(self.pM)
                 self.pM=self.pM*self.tot*self.detJ*self.alfa
                 self.hbcM=self.hbcM*self.detJ*self.alfa
-                # print("hbc")
-                # print(self.hbcM)
-                # print("p")
-                # print(self.pM)
                 self.plist.append(self.pM)
                 self.hbclist.append(self.hbcM)
             hbc=np.zeros((4, 4))

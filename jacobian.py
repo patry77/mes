@@ -1,6 +1,21 @@
 import numpy as np
 from ElementUni import ElementUni
 from gauss import gauss
+
+'''
+Obliczanie macierzy H i C
+Macierz H jest macierzą sztywności elementu, czyli macierzą współczynników przy nieznanych temperaturach
+Macierz C jest macierzą pojemności cieplnej elementu, czyli macierzą współczynników przy znanych temperaturach
+detJMatrix - macierz wyznaczników macierzy Jacobiego
+dNdx - pochodne funkcji kształtu po x
+dNdy - pochodne funkcji kształtu po y
+dxdeta - pochodne x po eta
+dydeta - pochodne y po eta
+dxdksi - pochodne x po ksi
+dydksi - pochodne y po ksi
+inverseJMatrix - macierz odwrotna do macierzy Jacobiego, która jest potrzebna do obliczenia pochodnych funkcji kształtu
+
+'''
 class localHMatrix:
     def __init__(self, points, grid, globalData):
         self.points=points

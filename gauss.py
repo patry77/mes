@@ -1,5 +1,9 @@
 import math
 
+'''
+Calkowanie gaussa
+Wyznaczamy punkty i wagi dla danego stopnia wielomianu
+'''
 
 class gauss:
     def __init__(self, points):
